@@ -13,6 +13,8 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
+#include <exception>
+using namespace std;
 
 namespace SimpleWeb {
     template <class socket_type>
@@ -357,7 +359,13 @@ namespace SimpleWeb {
                     if(!ec) {
                         if(timeout_content>0)
                             timer->cancel();
-                        auto http_version=stof(request->http_version);
+                        auto http_version = 1.1;
+                        try{
+                            http_version=stof(request->http_version);
+                        }
+                        catch (exception& e){
+                            cout << "Exception: " << e.what() << endl;
+                            }
                         
                         auto range=request->header.equal_range("Connection");
                         for(auto it=range.first;it!=range.second;it++) {
